@@ -1,0 +1,36 @@
+name: NTCEmojiChatFolia
+version: '${project.version}'
+main: com.example.emojichat.EmojiChatPlugin
+api-version: '1.21'
+folia-supported: true
+author: Lao_direct
+commands:
+  emoji:
+    description: 打开表情列表 GUI / 上传表情、管理表情或手动同步资源包
+    usage: /emoji [upload|save|sync|list|set|reload]
+    permission: emojichat.command.emoji
+permissions:
+  emojichat.command.emoji:
+    description: 允许使用 /emoji
+    default: true
+  emojichat.chat:
+    description: 允许聊天消息被替换为表情
+    default: true
+  emojichat.upload:
+    description: 允许上传表情
+    default: true
+  emojichat.save:
+    description: 允许通过聊天悬停点击或 /emoji save 保存别人发送的自定义表情
+    default: true
+  ntc.admin:
+    description: 拥有 NTCEmojiChatFolia 完整插件管理员权限，并跳过 /emoji sync 与 /emoji upload 冷却；OP 默认拥有
+    default: op
+    children:
+      emojichat.command.emoji: true
+      emojichat.chat: true
+      emojichat.upload: true
+      emojichat.save: true
+      emojichat.admin: true
+  emojichat.admin:
+    description: 旧版管理员权限节点，保留兼容；建议改用 ntc.admin
+    default: op

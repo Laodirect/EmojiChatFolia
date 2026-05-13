@@ -1,0 +1,129 @@
+#   _____                 _ _  ____ _           _
+#  | ____|_ __ ___   ___ (_|_) / ___| |__   __ _| |_
+#  |  _| | '_ ` _ \ / _ \| | || |   | '_ \ / _` | __|
+#  | |___| | | | | | (_) | | || |___| | | | (_| | |_
+#  |_____|_| |_| |_|\___// |_| \____|_| |_|\__,_|\__|
+#                      |__/             by.Lao_direct
+
+settings:
+  # 服务器名称，会显示在上传网页、首次提示、资源包说明等位置。
+  server-name: "NeoTcc"
+
+  # true: 基础表情使用资源包字体字符。
+  # false: 基础表情使用 fallback Unicode。
+  use-resource-pack-font: true
+
+  # 基础表情字体路径。对应静态资源包：assets/emojichat/font/emoji.json
+  font-key: "emojichat:emoji"
+
+  # /emoji GUI 标题
+  gui-title: "表情列表"
+
+personal-emojis:
+  # 动态表情字体路径。自动生成的全量服务器资源包会写入：assets/emojichat/font/personal.json
+  # 注意：不要和 settings.font-key 相同，否则可能覆盖基础表情字体文件。
+  font-key: "emojichat:personal"
+
+  # 上传图片会被统一缩放到这个正方形尺寸。
+  image-size: 64
+
+  # 每名玩家最多保存的自定义表情数量。
+  max-saved-per-player: 18
+
+  # 聊天内显示大小。放大/缩小动态表情时主要改这两个值。
+  font-height: 24
+  font-ascent: 20
+
+  # 动态表情使用全局私有区字符。每个上传表情会被永久分配一个 glyph。
+  codepoint-start: "E200"
+  codepoint-end: "F8FF"
+
+  # 仅作为旧数据或错误时的备用文本。聊天里的自定义表情会发送 glyph，而不是发送这段文字。
+  unsynced-placeholder: "?"
+
+upload-server:
+  enabled: true
+  bind: "0.0.0.0"
+  port: 8123
+
+  # 必须改成玩家客户端能访问到的地址。
+  # 可以直接写完整协议，例如：https://pack.example.com 或 http://tunnel.example.com:18080
+  # 也可以只写域名/端口，例如：tunnel.example.com:18080，然后由 auto-add-scheme 决定是否自动补协议。
+  # 如果保持 127.0.0.1 / localhost，只有服务器本机能访问；普通玩家不会收到可下载的材质包。
+  public-url: "127.0.0.1:8123"
+
+  # 是否在 public-url 没有 http:// 或 https:// 时自动补全协议。
+  # enabled: true  时会补为 scheme://public-url
+  # enabled: false 时完全按 public-url 原样使用，不强制补 http://
+  # 注意：Minecraft 的点击打开链接不支持无协议 URL；当 enabled=false 且 public-url 无协议时，聊天点击只会填入链接，避免客户端自动按 http:// 打开。
+  auto-add-scheme:
+    enabled: false
+    scheme: "https"
+
+  # 上传图片大小限制，单位 KB。上传网页会前端拦截，服务端也会再次校验。
+  max-file-size-kb: 1024
+
+  # 上传图片解码后的最大宽高，用于防止小体积超大分辨率图片造成内存压力。0 表示不限制。
+  max-image-width: 2048
+  max-image-height: 2048
+
+  # HTTP 上传/下载服务固定线程池大小，避免大量下载排队时创建过多线程。
+  # 按常态约 70 人配置：10 条 HTTP 工作线程，配合下载队列，避免人数爆发时创建过多线程。
+  max-http-threads: 10
+
+  # HTTP 服务 socket backlog。人数爆发时允许系统先排队连接，插件侧仍会按下载队列保护带宽。
+  backlog: 128
+
+  upload-token-expire-seconds: 300
+
+qq-bot-api:
+  # 预留给少爷上传表情的 HTTP API，默认关闭。
+  # 启用前必须把 auth-token 改成足够长的随机密钥...
+  enabled: false
+  path: "/api/qq/emoji/upload"
+  auth-token: "change-me"
+
+  # 当机器人上传时没有传 ownerUuid / ownerName，就使用下面的默认身份写入 meta.yml。
+  default-owner-uuid: "00000000-0000-0000-0000-000000000000"
+  default-owner-name: "KiKi-FusionBot"
+
+  # true 时会把机器人上传的表情加入 default-owner-uuid 对应玩家的表情栏。
+  # 一般保持 false，避免机器人默认占用某个玩家表情栏。
+  add-to-owner-library: false
+
+resource-pack:
+  # 资源包只会在玩家执行 /emoji sync 时尝试发送；上传、保存表情、加入服务器都不会主动发送。
+  # 这个包包含全部动态表情，包括玩家尚未保存到自己表情栏的表情。
+
+  # if玩家从未成功加载过资源包时，加入服务器后显示一次小型聊天公告。
+  first-join-notice: true
+  join-delay-ticks: 40
+
+  # 使用 ResourcePackCached 时建议保持 false，避免每次发送前主动移除旧包。
+  remove-before-send: false
+
+  force: false
+  prompt: "加载 NeoTcc 全量服务器表情包以显示所有玩家上传的表情。建议安装 ResourcePackCached 保存服务器材质。"
+
+  # 插件会在资源包 URL 后自动追加 ?v=<sha1>，避免客户端或代理缓存旧 zip。
+  # 1.21.x 可用；如未来版本警告，可改成对应 pack_format。
+  pack-format: 34
+
+  # /emoji sync 与 /emoji upload 共用冷却时间，单位秒。默认 600 秒，即 10 分钟；OP / ntc.admin 不受限制。
+  sync-cooldown-seconds: 600
+
+  # 资源包下载队列。默认同一时间只允许 1 个客户端下载，其他请求等待排队，避免瞬间占满服务器带宽。
+  download-queue:
+    enabled: true
+    # 按约 70Mib/s 上行适配：同时 2 个下载，每个最多 2MiB/s，总峰值约 32Mib/s，给日常游玩保留余量。
+    max-concurrent-downloads: 2
+
+    # 爆发同步时允许排队 15 分钟，避免 70 人左右同时同步时后排玩家过早失败。
+    wait-timeout-seconds: 900
+    buffer-size-kb: 64
+
+    # 进入下载处理的最大等待/下载请求数。超过后返回 503，防止异常人数爆发拖垮 HTTP 服务。0 表示不限制。
+    max-waiting-downloads: 80
+
+    # 单个资源包下载连接限速，单位 byte/s。2097152 = 2 MiB/s。
+    max-bytes-per-second: 2097152
